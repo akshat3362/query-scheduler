@@ -176,7 +176,6 @@ int main_page()
 	 printf("KINDLY ENTER A NUMBER:\n");
 	printf("1: student query\n");
 	printf("2: faculty query\n");
-	printf("3: exit\n");
 	scanf("%d",&query_number[i]);
 }
 	for(i=0;i<process_number;i++)
