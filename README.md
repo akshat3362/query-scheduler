@@ -9,3 +9,4 @@ The main concept which I have in this project is scheduling of processes as numb
 So, I have used round robin scheduling as I have to give equal time to every query and round robin works on this principle only. 
 In round robin, time slices are assigned to each process in equal portions and in circular order, handling all processes without priority.
 Round robin is simple and starvation scheduling algorithm.
+and i have also used priority scheduling as i have to give higher priority to faculty query but as we know there is no priority in case of round robin so as to include the concept of priority i have to modify the round robin algorithm as according to my problem.
