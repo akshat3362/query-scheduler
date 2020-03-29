@@ -2,138 +2,174 @@
 #include<stdlib.h>
 #include<string.h>
 #include<stdbool.h>
-void student(int process_number)
+struct os
 {
-int k,i,arrival_time[process_number],burst_time[process_number],total,sum=0;
-for( i=0;i<process_number;i++)
+	int sum,student_arrival_time[100],student_burst_time[100],sum1,faculty_arrival_time[100],faculty_burst_time[100];
+}q;
+void student()
+{
+int k,i,total;
+for(i=0;i<q.sum;i++)
 {
 	printf("enter the burst time for the %d query(in minutes)\n",(i+1));
-	scanf("%d",&burst_time[i]);
+	scanf("%d",&q.student_burst_time[i]);
 	printf("ENTER THE ARRIVAL TIME IN 24 HOURS FORMAT AND ENTER TIME BETWEEN 10 AND 12 ONLY . EG- FOR 10:00 ENTER 1000\n");
 	printf("enter the arrival time for the %d query\n",(i+1));
-	scanf("%d",&arrival_time[i]);
-	if(arrival_time[i]>=1000 & arrival_time[i]<=1200)
+	scanf("%d",&q.student_arrival_time[i]);
+	if(q.student_arrival_time[i]>=1000 & q.student_arrival_time[i]<=1200)
 	{
 		printf("Thanks for your help , your query will be resolved shortly.\n\n");
 	}
 	else
 	{
 		printf("admin not available\n\n");
-		arrival_time[i]=0;
+		q.student_arrival_time[i]=0;
 		printf("ENTER THE TIME AGAIN\n\n");
-		scanf("%d",&arrival_time[i]);
+		scanf("%d",&q.student_arrival_time[i]);
 	}
 }
-printf("-------------------------------------------------------\n");
-printf("PROCESS NUMBER \t BURST TIME\t ARRIVING TIME\n");
-for(i=0;i<process_number;i++)
-{
-	printf("%d \t\t %d \t\t %d\n",(i+1),burst_time[i],arrival_time[i]);
 }
-printf("--------------------------------------------------------\n");
-int remaining_time[process_number],quantum,waiting_time,turnaround_time;
-printf("enter the quantum time\n");
+void faculty()
+{
+int j,i;
+for(j=0;j<q.sum1;j++)
+{
+	printf("enter the burst time for the %d query",(j+1));
+	scanf("%d",&q.faculty_burst_time[j]);
+	printf("enter the arrival time for the %d query\n",(j+1));
+	printf("ENTER THE TIME IN 24 HOURS FORMAT. EG- FOR 10:00 ENTER 1000\n");
+	scanf("%d",&q.faculty_arrival_time[j]);
+	if(q.faculty_arrival_time[j]>=1000 & q.faculty_arrival_time[j]<=1200)
+	{
+		printf("Thanks for your help , your query will be resolved shortly.\n\n");
+	}
+	else
+	{
+		printf("admin not available\n\n");
+		q.faculty_arrival_time[j]=0;
+		printf("ENTER THE TIME AGAIN\n\n");
+		scanf("%d",&q.faculty_arrival_time[j]);
+	}	
+}
+
+}
+void schedule()
+{
+	int temp,ttime;
+if(q.student_arrival_time[0]<q.faculty_arrival_time[0])
+{
+temp=q.student_arrival_time[0];	
+}
+else
+{
+	temp=q.faculty_arrival_time[0];
+}
+int j=0,k=0,i=0,quantum;
+printf("\nenter the quantum\n");
 scanf("%d",&quantum);
-printf("-----------------ROUND ROBIN ALGORITHM-------------------------------\n");
-int j=0,ttime=0;
-printf("\nPROCESS NUMBER \t REMAINING TIME\t TOTAL TIME");
-int temp;
-temp=arrival_time[0];
-while(j<process_number)
-{ 
-	for(i=0;i<process_number;i++)
- {
- 	if(temp>=arrival_time[i])
- 	{	 
-	if(burst_time[i]>0)
+while(k<(q.sum+q.sum1))
+{
+for(j=0;j<q.sum1;j++)
+{
+if(temp>=q.faculty_arrival_time[j])
+{
+	{	 
+	if(q.faculty_burst_time[j]>0)
     { 
-if(burst_time[i]>=quantum)
+if(q.faculty_burst_time[j]>=quantum)
     { 
 temp+=quantum;
 ttime+=quantum;
-burst_time[i]=burst_time[i]-quantum;
-printf("\n%d\t\t %d \t\t %d",(i+1),burst_time[i],temp);
-if(burst_time[i]==0)
-j++;
+q.faculty_burst_time[j]=q.faculty_burst_time[j]-quantum;
+printf("\nfaculty\t%d\t\t %d \t\t %d",(j+1),q.faculty_burst_time[j],temp);
+if(q.faculty_burst_time[j]==0)
+k++;
    }
 else 
 { 
-temp+=burst_time[i];
-ttime+=burst_time[i];
-burst_time[i]=0;
-j++;
-printf("\n%d\t\t %d \t\t %d",(i+1),burst_time[i],temp);
+temp+=q.faculty_burst_time[j];
+ttime+=q.faculty_burst_time[j];
+q.faculty_burst_time[j]=0;
+k++;
+printf("\nfaculty\t%d\t\t %d \t\t %d",(j+1),q.faculty_burst_time[j],temp);
+}
+}
+}
+}
+}
+for(i=0;i<q.sum;i++)
+{
+if(temp>=q.student_arrival_time[i])
+{
+	{	 
+	if(q.student_burst_time[i]>0)
+    { 
+if(q.student_burst_time[i]>=quantum)
+    { 
+temp+=quantum;
+ttime+=quantum;
+q.student_burst_time[i]=q.student_burst_time[i]-quantum;
+printf("\nstudent\t%d\t\t %d \t\t %d",(i+1),q.student_burst_time[i],temp);
+if(q.student_burst_time[i]==0)
+k++;
+   }
+else 
+{ 
+temp+=q.student_burst_time[i];
+ttime+=q.student_burst_time[i];
+q.student_burst_time[i]=0;
+k++;
+printf("\nstudent\t%d\t\t %d \t\t %d",(i+1),q.student_burst_time[i],temp);
 }
 }
 else
 {
-	if((arrival_time[i+1]-temp)>0)
+	if((q.student_arrival_time[i+1]-temp)>0)
 	{
 	printf("\n%d -",temp);
-	temp=temp+(arrival_time[i+1]-temp);
+	temp=temp+(q.student_arrival_time[i+1]-temp);
 	printf("%d no process was running at this time ",temp);
     }
 }
 }
 }
 }
-printf("\nTotal Time spent on handling queries %d\n",ttime);
-float e = process_number;
-printf("Average Time spent on handling queries %f\n",(ttime/e));
 }
-void faculty(int process_number)
-{
-int i, arrival_time[process_number],burst_time[process_number];
-for(i=0;i<process_number;i++)
-{
-	printf("enter the burst time for the %d query",(i+1));
-	scanf("%d",&burst_time[i]);
-	printf("enter the arrival time for the %d query\n",(i+1));
-	printf("ENTER THE TIME IN 24 HOURS FORMAT. EG- FOR 10:00 ENTER 1000\n");
-	scanf("%d",&arrival_time[i]);
-	if(arrival_time[i]>=1000 & arrival_time[i]<=1200)
-	{
-		
-	}
-	else
-	{
-		printf("Sorry admin not available\n");
-	}
-}
-
-	
 }
 int main_page()
 {
-	int query_number,process_number;
-	printf("KINDLY ENTER A NUMBER:\n");
+	int i,process_number;
+	printf("enter the number of processes");
+	scanf("%d",&process_number);
+	int query_number[process_number];
+	for(i=0;i<process_number;i++)
+	{
+	 printf("KINDLY ENTER A NUMBER:\n");
 	printf("1: student query\n");
 	printf("2: faculty query\n");
 	printf("3: exit\n");
-	scanf("%d",&query_number);
-	switch(query_number)
+	scanf("%d",&query_number[i]);
+}
+	for(i=0;i<process_number;i++)
 	{
-		case 1:
-			printf("enter the number of process\n");
-			scanf("%d",&process_number);
-			student(process_number);
-			break;
-		case 2:
-			printf("enter the number of process\n");
-			scanf("%d",&process_number);
-			faculty(process_number);
-			break;
-		case 3:
-			exit(0);
-			break;
-		default:
-			printf("PLEASE ENTER A VALID NUMBER\n");
-			main_page();
-			break;
+	if(query_number[i]==1)
+	{
+		q.sum=q.sum+1;
+	}
+	else if(query_number[i]==2)
+	{
+		q.sum1=q.sum1+1;
 	}
 }
+	
+}
+
+
 
 int main()
 {
 main_page();
+student();
+faculty();
+schedule();
 } 
